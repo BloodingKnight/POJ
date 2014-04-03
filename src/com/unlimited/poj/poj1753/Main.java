@@ -1,6 +1,8 @@
 package com.unlimited.poj.poj1753;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * Created by unlimited on 14-4-3.
@@ -11,6 +13,27 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("Hello, World!");
+
+        int count = BFS(null, null);
+        if (count >= 0) {
+            System.out.println(count);
+        } else {
+            System.out.println("Impossible");
+        }
+    }
+
+    public static int BFS(Graph g, Visitor v) {
+        Queue<Graph> queue = new LinkedList<Graph>();
+        int count = 0;
+
+
+        return count;
+    }
+}
+
+class Visitor {
+    public boolean visit(Graph g) {
+        return false;
     }
 }
 
@@ -23,7 +46,14 @@ class Graph {
     };
 
     private int id;
-    private List<Graph> children;
+    private int visited;
+    public List<Graph> children;
 
+    public Graph() {
 
+    }
+
+    public Graph flip(int transfer) {
+        return null;
+    }
 }
