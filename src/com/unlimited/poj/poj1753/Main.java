@@ -19,10 +19,7 @@ public class Main {
         }
         Graphics g = new Graphics(strings);
 
-        long start = System.currentTimeMillis();
         GraphicsNode node = BFS(g, new Visitor());
-        long end = System.currentTimeMillis();
-        System.out.println(end - start);
 
         if (node != null) {
             System.out.println(node.length);
@@ -48,11 +45,8 @@ public class Main {
             }
 
             List<Integer> nodes = node.getChildren();
-            for (int _id : nodes) {
-                GraphicsNode n = g.getNode(_id);
-                if (!n.visited) {
-                    queue.offer(_id);
-                }
+            for (Integer integer : nodes) {
+                queue.offer(integer);
             }
         }
 
@@ -67,18 +61,16 @@ class Visitor {
 }
 
 class Graphics {
-    public Map<Integer, Integer> visited = new HashMap<Integer, Integer>();
-    public Map<Integer, Integer> newcome = new HashMap<Integer, Integer>();
+    public Map<Integer, Integer> visited = new TreeMap<Integer, Integer>();
+    public Map<Integer, Integer> newcome = new TreeMap<Integer, Integer>();
     public GraphicsNode root;
 
-    public GraphicsNode getNode(int id) {
-        root.id = id;
-        if (visited.get(id) != null) {
-            root.length = visited.get(id);
-            root.visited = true;
+    public GraphicsNode getNode(int _id) {
+        root.id = _id;
+        if (visited.get(_id) != null) {
+            root.length = visited.get(_id);
         } else {
-            root.length = newcome.get(id);
-            root.visited = false;
+            root.length = newcome.get(_id);
         }
 
         return root;
@@ -107,7 +99,6 @@ class GraphicsNode {
     public int id;
     public int length;
     public Graphics owner;
-    public boolean visited;
     private List<Integer> children;
     private static int TRANSFER[] = {
             0xC800, 0xE400, 0x7200, 0x3100,
@@ -118,18 +109,13 @@ class GraphicsNode {
 
     public GraphicsNode(int id, Graphics owner) {
         this.id = id;
-        this.visited = false;
         this.owner = owner;
     }
 
     public boolean accept(Visitor v) {
-        if (owner.newcome.get(id) != null) {
-            owner.visited.put(id, owner.newcome.get(id));
-            owner.newcome.remove(id);
-            return v.visit(this);
-        }
-
-        return false;
+        owner.visited.put(id, owner.newcome.get(id));
+        owner.newcome.remove(id);
+        return v.visit(this);
     }
 
     public List<Integer> getChildren() {
@@ -141,10 +127,10 @@ class GraphicsNode {
         int _id;
         for (int i : TRANSFER) {
             _id = id ^ i;
-            if (owner.visited.get(_id) == null || owner.newcome.get(_id) == null) {
+            if (owner.visited.get(_id) == null && owner.newcome.get(_id) == null) {
                 owner.newcome.put(_id, length + 1);
+                children.add(_id);
             }
-            children.add(_id);
         }
 
         return children;
